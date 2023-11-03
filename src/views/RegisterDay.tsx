@@ -6,10 +6,6 @@ import CalendarPicker from 'react-native-calendar-picker';
 export const RegisterDay = () => {
     const [date, setDate] = useState<moment.Moment>();
 
-    useEffect(() => {
-        console.log(date);
-    }, [date]);
-
     return (
         <Container>
             <CalendarPicker

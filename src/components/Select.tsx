@@ -5,10 +5,13 @@ import {
     StyleSheet,
     Modal,
     FlatList,
-    View
+    View,
+    Button
 } from 'react-native';
 import styled from 'styled-components/native';
 import Icon from 'react-native-vector-icons/FontAwesome5';
+import { useContextProvider } from '../context/Context';
+import { ButtonDefault } from './ButtonDefault';
 
 type DataType = {
     key: string;
@@ -30,6 +33,7 @@ const initialValue: DataType = {
 export const Select = ({ data, onChangeSelect, text = 'Define text', modalText = 'Define Config' }: SelectProps) => {
     const [activeModal, setActiveModal] = useState<boolean>(false);
     const [selected, setSelected] = useState<DataType>(initialValue);
+    const navigate = useContextProvider();
 
     const onSelect = (item: DataType) => {
         onChangeSelect(item ?? "");
@@ -57,9 +61,15 @@ export const Select = ({ data, onChangeSelect, text = 'Define text', modalText =
                     data={data}
                     renderItem={({ item, index }) => (
                         <TouchableOpacity style={styles.selection} onPress={() => onSelect(item)}>
-                            <Text>{item.key}</Text>
+                            <Text style={styles.text}>{item.key}</Text>
                         </TouchableOpacity>
                     )}
+                />
+                <ButtonDefault
+                text='Novo Registro'
+                width='100%'
+                color='#0080ff'
+                onPress={() => navigate.navigate('CreateConfig')}
                 />
             </Modal>
         </>
@@ -73,8 +83,8 @@ const TextStyle = styled.Text`
 
 const styles = StyleSheet.create({
     container: {
-        width: '70%',
-        height: '22%',
+        width: '80%',
+        height: 55,
         color: 'black',
         borderRadius: 5,
         paddingHorizontal: 10,
@@ -96,11 +106,15 @@ const styles = StyleSheet.create({
     },
     header: {
         width: '100%',
-        height: 45,
+        height: 55,
         flexDirection: 'row',
         paddingHorizontal: 10,
         paddingVertical: 10,
+        alignItems: 'center',
         justifyContent: 'space-between',
         borderBottomWidth: 0.5,
+    },
+    text: {
+        fontSize: 24
     }
 });

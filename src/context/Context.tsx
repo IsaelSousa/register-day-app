@@ -1,29 +1,46 @@
 import React, { createContext, useContext } from 'react';
-import { useNavigation as useReactNavigation } from '@react-navigation/native';
+import { NavigationContainer } from '@react-navigation/native';
 
-const Context = createContext({});
+const Context = createContext<ContextType | any>({});
 
 type Provider = {
-    children: React.ReactNode;
+  children: React.ReactNode;
+}
+
+type ContextType = {
+  navigate: (name: string, params?: any) => void;
+  goBack: () => void;
 }
 
 export const ContextProvider = ({ children }: Provider) => {
+  const navigationRef = React.useRef<any>();
 
-    const actions = {
+  const navigate = (name: string, params?: any) => {
+    navigationRef.current?.navigate(name, params);
+  };
 
-    }
+  const goBack = () => {
+    navigationRef.current?.goBack();
+  };
 
-    const state = {
+  const actions = {
+    navigate,
+    goBack
+  }
 
-    }
+  const state = {
+
+  }
 
   return (
-    <Context.Provider value={{ ...actions, ...state }}>
-      {children}
-    </Context.Provider>
+    <NavigationContainer ref={navigationRef}>
+      <Context.Provider value={{ ...actions, ...state }}>
+        {children}
+      </Context.Provider>
+    </NavigationContainer>
   );
 };
 
 export const useContextProvider = () => {
-  return useContext(Context);
+  return useContext<ContextType>(Context);
 };

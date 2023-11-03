@@ -1105,7 +1105,7 @@
   resolved "http://sequor-ci-runner2.eastus2.cloudapp.azure.com:4873/@babel%2fregjsgen/-/regjsgen-0.8.0.tgz#f0ba69b075e1f05fb2825b7fad991e7adbb18310"
   integrity sha512-x/rqGMdzj+fWZvCOYForTghzbtqPDZ5gPwaoNGHdgDfF2QA/XZbCBp4Moo5scrkAMPhB7z26XM/AaHuIJdgauA==
 
-"@babel/runtime@^7.0.0", "@babel/runtime@^7.20.0", "@babel/runtime@^7.8.4":
+"@babel/runtime@>=7", "@babel/runtime@^7.0.0", "@babel/runtime@^7.20.0", "@babel/runtime@^7.8.4":
   version "7.23.2"
   resolved "http://sequor-ci-runner2.eastus2.cloudapp.azure.com:4873/@babel%2fruntime/-/runtime-7.23.2.tgz#062b0ac103261d68a966c4c7baf2ae3e62ec3885"
   integrity sha512-mM8eg4yl5D6i3lu2QKPuPH4FArvJ8KhTofbE7jwMUv9KX5mBvwPAqnV3MlyBNqdp9RyRKP6Yck8TrfYrPvX3bg==
@@ -1833,6 +1833,16 @@
     "@react-navigation/elements" "^1.3.21"
     color "^4.2.3"
     warn-once "^0.1.0"
+
+"@realm/react@^0.6.1":
+  version "0.6.1"
+  resolved "http://sequor-ci-runner2.eastus2.cloudapp.azure.com:4873/@realm%2freact/-/react-0.6.1.tgz#f12ca86281d9eebaf0ae3d0bb4db97108160a23e"
+  integrity sha512-+W16jgjqXpNzLsQvOW294yqffZw36uvk3257tuk4A9a9JyO4RdX1kEYxondleV8jDAqpeyYf5ajyZuZeDiYErw==
+  dependencies:
+    lodash "^4.17.21"
+  optionalDependencies:
+    "@babel/runtime" ">=7"
+    react-native ">=0.68"
 
 "@sideway/address@^4.1.3":
   version "4.1.4"
@@ -6041,7 +6051,7 @@ react-native-vector-icons@^10.0.0:
     prop-types "^15.7.2"
     yargs "^16.1.1"
 
-react-native@0.72.6:
+react-native@0.72.6, react-native@>=0.68:
   version "0.72.6"
   resolved "http://sequor-ci-runner2.eastus2.cloudapp.azure.com:4873/react-native/-/react-native-0.72.6.tgz#9f8d090694907e2f83af22e115cc0e4a3d5fa626"
   integrity sha512-RafPY2gM7mcrFySS8TL8x+TIO3q7oAlHpzEmC7Im6pmXni6n1AuufGaVh0Narbr1daxstw7yW7T9BKW5dpVc2A==
