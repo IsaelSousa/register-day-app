@@ -1,25 +1,21 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState } from 'react';
 import {
     Text,
     TouchableOpacity,
     StyleSheet,
     Modal,
     FlatList,
-    View,
-    Button
+    View
 } from 'react-native';
 import styled from 'styled-components/native';
 import Icon from 'react-native-vector-icons/FontAwesome5';
 import { useContextProvider } from '../context/Context';
 import { ButtonDefault } from './ButtonDefault';
-
-type DataType = {
-    key: string;
-    value: string;
-}
+import { ViewCreateConfigModal } from '../views/ViewCreateConfigModal';
+import { DataType } from '../types/types';
+import { useQuery } from '@realm/react';
 
 type SelectProps = {
-    data?: DataType[];
     text?: string;
     modalText?: string;
     onChangeSelect: (value: DataType) => void;
@@ -30,15 +26,26 @@ const initialValue: DataType = {
     value: ''
 }
 
-export const Select = ({ data, onChangeSelect, text = 'Define text', modalText = 'Define Config' }: SelectProps) => {
+export const Select = ({ onChangeSelect, text = 'Define text', modalText = 'Define Config' }: SelectProps) => {
     const [activeModal, setActiveModal] = useState<boolean>(false);
+    const [activeDialog, setActiveDialog] = useState<boolean>(false);
     const [selected, setSelected] = useState<DataType>(initialValue);
+    const [status, setStatus] = useState<boolean>(false);
+    const [data, setData] = useState<DataType[]>();
+
     const navigate = useContextProvider();
+    const config = useQuery<DataType>('config');
 
     const onSelect = (item: DataType) => {
         onChangeSelect(item ?? "");
         setSelected(item);
         setActiveModal(false);
+    }
+
+    const refreshData = () => {
+        setStatus(true);
+        setData(config.map(item => item));
+        setStatus(false);
     }
 
     return (
@@ -59,6 +66,8 @@ export const Select = ({ data, onChangeSelect, text = 'Define text', modalText =
                 </View>
                 <FlatList
                     data={data}
+                    refreshing={status}
+                    onRefresh={() => refreshData()}
                     renderItem={({ item, index }) => (
                         <TouchableOpacity style={styles.selection} onPress={() => onSelect(item)}>
                             <Text style={styles.text}>{item.key}</Text>
@@ -66,10 +75,17 @@ export const Select = ({ data, onChangeSelect, text = 'Define text', modalText =
                     )}
                 />
                 <ButtonDefault
-                text='Novo Registro'
-                width='100%'
-                color='#0080ff'
-                onPress={() => navigate.navigate('CreateConfig')}
+                    text='Novo Registro'
+                    width='100%'
+                    color='#0080ff'
+                    onPress={() => setActiveDialog(true)}
+                />
+            </Modal>
+
+
+            <Modal animationType='fade' visible={activeDialog} onDismiss={() => setActiveDialog(false)}>
+                <ViewCreateConfigModal
+                    onClose={() => setActiveDialog(false)}
                 />
             </Modal>
         </>
