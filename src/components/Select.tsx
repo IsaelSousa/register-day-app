@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import {
     Text,
     TouchableOpacity,
@@ -9,11 +9,11 @@ import {
 } from 'react-native';
 import styled from 'styled-components/native';
 import Icon from 'react-native-vector-icons/FontAwesome5';
-import { useContextProvider } from '../context/Context';
-import { ButtonDefault } from './ButtonDefault';
-import { ViewCreateConfigModal } from '../views/ViewCreateConfigModal';
 import { DataType } from '../types/types';
-import { useQuery } from '@realm/react';
+import { useQuery, useRealm } from '@realm/react';
+import { InputText } from './InputText';
+import utils from '../helpers/utils';
+import Toast from 'react-native-toast-message';
 
 type SelectProps = {
     text?: string;
@@ -22,19 +22,22 @@ type SelectProps = {
 }
 
 const initialValue: DataType = {
-    key: '',
-    value: ''
+    id: '',
+    configKey: '',
+    description: ''
 }
 
 export const Select = ({ onChangeSelect, text = 'Define text', modalText = 'Define Config' }: SelectProps) => {
     const [activeModal, setActiveModal] = useState<boolean>(false);
-    const [activeDialog, setActiveDialog] = useState<boolean>(false);
     const [selected, setSelected] = useState<DataType>(initialValue);
     const [status, setStatus] = useState<boolean>(false);
     const [data, setData] = useState<DataType[]>();
 
-    const navigate = useContextProvider();
     const config = useQuery<DataType>('config');
+    const realm = useRealm();
+
+    const [configKey, setConfigKey] = useState<string>('');
+    const [description, setDescription] = useState<string>('');
 
     const onSelect = (item: DataType) => {
         onChangeSelect(item ?? "");
@@ -45,14 +48,41 @@ export const Select = ({ onChangeSelect, text = 'Define text', modalText = 'Defi
     const refreshData = () => {
         setStatus(true);
         setData(config.map(item => item));
-        setStatus(false);
+        setTimeout(() => {
+            setStatus(false);
+        }, 500);
     }
+
+    const deleteRealm = (id: string) => {
+        realm.write(() => {
+            const person = realm.objects('config').filtered(`id = '${id}'`);
+            realm.delete(person);
+        });
+        refreshData();
+    }
+
+    const save = () => {
+        realm.write(() => {
+            realm.create('config', {
+                id: utils.generateUUID(),
+                configKey: configKey,
+                description: description
+            });
+        });
+        refreshData();
+        Toast.show({
+            type: 'success',
+            text1: 'Salvo com sucesso!'
+        });
+    }
+
+    useEffect(() => refreshData(), []);
 
     return (
         <>
             <TouchableOpacity style={styles.container} onPress={() => setActiveModal(true)}>
                 <TextStyle numberOfLines={1}>
-                    {selected.key ? selected.key : text}
+                    {selected.description ? selected.description : text}
                 </TextStyle>
                 <Icon name='arrow-down' size={20} />
             </TouchableOpacity>
@@ -69,24 +99,27 @@ export const Select = ({ onChangeSelect, text = 'Define text', modalText = 'Defi
                     refreshing={status}
                     onRefresh={() => refreshData()}
                     renderItem={({ item, index }) => (
-                        <TouchableOpacity style={styles.selection} onPress={() => onSelect(item)}>
-                            <Text style={styles.text}>{item.key}</Text>
+                        <TouchableOpacity key={index} style={styles.selection} onPress={() => onSelect(item)}>
+                            <Text style={styles.text}>{index + 1} - {item.description}</Text>
+                            <TouchableOpacity onPress={() => deleteRealm(item.id)}>
+                                <Icon name='trash' size={30} />
+                            </TouchableOpacity>
                         </TouchableOpacity>
                     )}
                 />
-                <ButtonDefault
-                    text='Novo Registro'
-                    width='100%'
-                    color='#0080ff'
-                    onPress={() => setActiveDialog(true)}
+                <InputText
+                    placeholder='Descrição'
+                    value={description}
+                    onChangeText={(text) => setDescription(text)}
                 />
-            </Modal>
-
-
-            <Modal animationType='fade' visible={activeDialog} onDismiss={() => setActiveDialog(false)}>
-                <ViewCreateConfigModal
-                    onClose={() => setActiveDialog(false)}
+                <InputText
+                    placeholder='Chave'
+                    value={configKey}
+                    onChangeText={(text) => setConfigKey(text)}
                 />
+                <TouchableOpacity style={styles.button}>
+                    <Text style={styles.textButton} onPress={() => save()}>Salvar</Text>
+                </TouchableOpacity>
             </Modal>
         </>
     )
@@ -132,5 +165,25 @@ const styles = StyleSheet.create({
     },
     text: {
         fontSize: 24
+    },
+    textButton: {
+        fontSize: 30,
+    },
+    button: {
+        backgroundColor: 'lightgreen',
+        width: '95%',
+        padding: 5,
+        margin: 5,
+        borderRadius: 10,
+        justifyContent: 'center',
+        alignItems: 'center'
     }
 });
+
+const InputContainer = styled.View`
+    position: absolute;
+    bottom: 5%;
+    justify-content: center;
+    align-items: center;
+    width: 100%;
+`;

@@ -6,6 +6,7 @@ import { ViewMain } from './src/views/ViewMain';
 import { RealmProvider } from '@realm/react';
 import { ObjectSchema } from 'realm';
 import Toast from 'react-native-toast-message';
+import { ViewHomePage } from './src/views/ViewHomePage';
 
 const Stack = createStackNavigator();
 
@@ -16,13 +17,14 @@ function App(): JSX.Element {
     properties: {
       id: 'string',
       description: 'string',
-      key: 'string?'
+      configKey: 'string'
     },
     primaryKey: 'id'
   }]
 
   return (
     <>
+
       <RealmProvider schema={schema}>
         <ContextProvider>
           <StatusBar />
@@ -31,10 +33,14 @@ function App(): JSX.Element {
           }}>
             <Stack.Screen name="Home" component={ViewMain} />
             <Stack.Screen name="Register" component={RegisterDay} />
+            <Stack.Screen name="ViewHomePage" component={ViewHomePage} />
           </Stack.Navigator>
         </ContextProvider>
       </RealmProvider>
-      <Toast />
+      <Toast
+        position='top'
+        
+      />
     </>
   );
 }
