@@ -67,11 +67,11 @@ const ContainerItem = styled.View`
 `;
 
 const Header = styled.Text`
-    font-size: 20;
+    font-size: 16;
     font-weight: bold;
     color: black;
 `;
 
 const TitleItem = styled.Text`
-    font-size: 16;
+    font-size: 16px;
 `

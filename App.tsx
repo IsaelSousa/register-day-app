@@ -27,7 +27,7 @@ function App(): JSX.Element {
 
       <RealmProvider schema={schema}>
         <ContextProvider>
-          <StatusBar />
+          <StatusBar barStyle='light-content' animated backgroundColor={'#2f353f'} />
           <Stack.Navigator screenOptions={{
             headerShown: false
           }}>

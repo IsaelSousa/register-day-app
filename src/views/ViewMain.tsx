@@ -39,6 +39,7 @@ const Container = styled.View`
     justify-content: center;
     align-items: center;
     width: 100%;
+    background-color: #141414;
 `;
 
 const InputContainer = styled.View`

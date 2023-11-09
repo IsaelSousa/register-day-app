@@ -1,6 +1,6 @@
 import React from 'react';
-import {} from 'react-native';
 import styled from 'styled-components/native';
+import { StyleSheet } from 'react-native';
 
 type InputTextProps = {
     placeholder?: string;
@@ -18,16 +18,25 @@ export const InputText = ({
             placeholder={placeholder}
             value={value}
             onChangeText={onChangeText}
+            style={styles.input}
+            placeholderTextColor={'#555555'}
         />
     );
 }
+
+const styles = StyleSheet.create({
+    input: {
+        color: '#afafaf'
+    }
+});
 
 export const Input = styled.TextInput`
     width: 95%;
     padding: 8px;
     margin: 5px;
-    font-size: 25px;
+    font-size: 20px;
     border-radius: 3px;
-    border: 1px solid black;
+    border: 1px solid #afafaf;
     text-align: center;
+    background-color: #49494942;
 `;
