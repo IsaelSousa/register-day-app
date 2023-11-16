@@ -12,4 +12,5 @@ export const Header = () => {
 
 const Container = styled.View`
     height: 45px;
+    background-color: #2f353f;
 `;

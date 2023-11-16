@@ -142,7 +142,7 @@ const TextStyle = styled.Text`
 
 const styles = StyleSheet.create({
     container: {
-        width: '80%',
+        width: '100%',
         height: 55,
         color: '#afafaf',
         borderRadius: 5,
@@ -167,7 +167,7 @@ const styles = StyleSheet.create({
         justifyContent: 'space-between',
         alignItems: 'center',
         flexDirection: 'row',
-        borderBottomWidth: 0.5,
+        borderWidth: 0.5,
         borderColor: '#afafaf'
     },
     textColor: {
